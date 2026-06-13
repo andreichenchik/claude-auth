@@ -1,0 +1,1 @@
+"""Claude auth automation package."""

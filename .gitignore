@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pylint.d/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+
+# Local env/secrets
+.env
+.env.*
+*.pem
+*.key
+
+# playwright-cli generated artifacts
+.playwright-cli/
+
+# macOS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Temporary files
+*.tmp
+*.log
