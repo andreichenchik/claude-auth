@@ -1,5 +1,4 @@
 #!/usr/bin/env -S uv run --script
-# pylint: disable=invalid-name
 # /// script
 # requires-python = ">=3.11"
 # dependencies = []

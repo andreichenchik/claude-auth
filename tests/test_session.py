@@ -1,3 +1,5 @@
+"""Tests for stable Playwright session names."""
+
 from __future__ import annotations
 
 import unittest
@@ -6,7 +8,10 @@ from claude_auth.session import session_name_for_email
 
 
 class SessionTests(unittest.TestCase):
+    """Tests for email-derived session naming."""
+
     def test_session_name_is_stable_and_email_case_insensitive(self) -> None:
+        """Session names are stable regardless of email case or whitespace."""
         first = session_name_for_email("User@Example.com")
         second = session_name_for_email(" user@example.COM ")
 

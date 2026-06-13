@@ -1,3 +1,5 @@
+"""Tests for auth button snapshot polling and clicking."""
+
 from __future__ import annotations
 
 import unittest
@@ -7,6 +9,8 @@ from claude_auth.auth_button import click_first_enabled_matching_element
 
 
 class FakePlaywright:
+    """Minimal playwright-cli fake that records element interactions."""
+
     def __init__(self) -> None:
         self.snapshots = 0
         self.hovered: list[str] = []
@@ -14,6 +18,8 @@ class FakePlaywright:
         self.sessions: list[str] = []
 
     def snapshot(self, *, session: str, output_path: Path) -> None:
+        """Write a disabled snapshot first, then an enabled snapshot."""
+
         self.sessions.append(session)
         self.snapshots += 1
         if self.snapshots == 1:
@@ -22,16 +28,23 @@ class FakePlaywright:
             output_path.write_text('- button "Authorize" [ref=b2]', encoding="utf-8")
 
     def hover(self, *, session: str, ref: str) -> None:
+        """Record the hovered element ref."""
+
         self.sessions.append(session)
         self.hovered.append(ref)
 
     def click(self, *, session: str, ref: str) -> None:
+        """Record the clicked element ref."""
+
         self.sessions.append(session)
         self.clicked.append(ref)
 
 
 class AuthButtonTests(unittest.TestCase):
+    """Tests for selecting and clicking enabled auth controls."""
+
     def test_waits_for_enabled_match_then_clicks(self) -> None:
+        """Clicking waits for a disabled matching element to become enabled."""
         playwright = FakePlaywright()
 
         clicked = click_first_enabled_matching_element(

@@ -1,3 +1,5 @@
+"""Tests for the playwright-cli command wrapper."""
+
 from __future__ import annotations
 
 import json
@@ -11,7 +13,10 @@ from claude_auth.playwright_cli import PlaywrightCli, write_login_browser_config
 
 
 class PlaywrightCliTests(unittest.TestCase):
+    """Tests for Playwright command construction and config output."""
+
     def test_args_include_session(self) -> None:
+        """Command arguments include the selected Playwright session."""
         cli = PlaywrightCli("playwright-cli")
 
         self.assertEqual(
@@ -20,6 +25,8 @@ class PlaywrightCliTests(unittest.TestCase):
         )
 
     def test_env_uses_short_tmpdir(self) -> None:
+        """The environment uses TMPDIR to keep daemon socket paths short."""
+
         env = PlaywrightCli(tmpdir="/tmp").env()
 
         self.assertIsNotNone(env)
@@ -27,10 +34,16 @@ class PlaywrightCliTests(unittest.TestCase):
         self.assertEqual(env["TMPDIR"], "/tmp")
 
     def test_open_builds_headed_persistent_config_command(self) -> None:
+        """Opening a browser builds the headed persistent config command."""
+
         calls: list[dict[str, object]] = []
 
         class FakePlaywright(PlaywrightCli):
+            """Playwright wrapper with a deterministic environment."""
+
             def env(self) -> dict[str, str]:
+                """Return a stable TMPDIR for command assertions."""
+
                 return {"TMPDIR": "/tmp"}
 
         cli = FakePlaywright("playwright-cli", "/tmp")
@@ -62,6 +75,8 @@ class PlaywrightCliTests(unittest.TestCase):
         self.assertIs(calls[0]["stderr"], subprocess.DEVNULL)
 
     def test_verbose_open_allows_raw_command_output(self) -> None:
+        """Verbose mode leaves stdout and stderr attached."""
+
         cli = PlaywrightCli("playwright-cli", "/tmp", verbose=True)
 
         with mock.patch("claude_auth.playwright_cli.run_checked") as run_checked:
@@ -71,6 +86,8 @@ class PlaywrightCliTests(unittest.TestCase):
         self.assertNotIn("stderr", run_checked.call_args.kwargs)
 
     def test_write_login_browser_config_sets_tall_viewport(self) -> None:
+        """Login browser config writes a tall viewport and output directory."""
+
         with tempfile.TemporaryDirectory() as directory:
             config_path = Path(directory) / "config.json"
             write_login_browser_config(
